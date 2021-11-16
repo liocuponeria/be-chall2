@@ -94,7 +94,7 @@ access <http://localhost/>
 
 2. Use MVC model
 
-3. Return a JSON on all resonses
+3. Return a JSON on all responses
 
 4. Use cURL as html form is not allowed
 
