@@ -23,10 +23,21 @@ class ProductController extends Controller
      *
      * @param [type] $type
      * @param [type] $category
-     * @return json string
+     * @return string
      */
-    public function search($type, $category) 
+    public function search(string $type, string $category) 
     {
         return ($this->productService->search($type, $category));
+    }
+
+    /**
+     * get highest and lowest prices products by brand
+     *
+     * @param string $brand
+     * @return string
+     */
+    public function brand(string $brand)
+    {
+        return ($this->productService->brandHiLowPrice($brand));
     }
 }

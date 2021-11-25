@@ -13,4 +13,7 @@
 
 $router->group(['prefix' => 'product'], function () use ($router) {
     $router->get('/search/{type}/{category}', 'ProductController@search');
+    $router->get('/brand/{brand}', 'ProductController@brand');
 });
+
+
