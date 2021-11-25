@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaction;
 use App\Services\ProductService;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -39,5 +41,10 @@ class ProductController extends Controller
     public function brand(string $brand)
     {
         return ($this->productService->brandHiLowPrice($brand));
+    }
+
+    public function buy(Request $request)
+    {
+        return $this->productService->create($request);
     }
 }

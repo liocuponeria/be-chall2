@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Transaction;
 use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductService
 {
@@ -41,7 +44,7 @@ class ProductService
             ]
         ]);
 
-        return json_decode( (string) $response->getBody(), true);
+        return $this->convertCurrency(json_decode( (string) $response->getBody()));
     }
 
     /**
@@ -71,11 +74,12 @@ class ProductService
     public function brandHiLowPrice($brand)
     {
         $allBrandProducts = $this->brand($brand);
-        return [
+        $products = [
             $this->getHighPrice($allBrandProducts),
             $this->getLowPrice($allBrandProducts)
             
         ];
+        return $this->convertCurrency($products);
     }
 
     /**
@@ -104,5 +108,52 @@ class ProductService
             return $old['price'] < $new['price'];
         });
         return $products[0];
+    }
+
+    /**
+     * Validate and save new transaction
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function create(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'productId' => 'required|integer',
+            'userId' => 'required|integer',
+            'price' => 'required|numeric',
+            'date' => 'date'
+        ]);
+
+        if (  $validator->fails()) {
+            return $validator->errors();
+        }
+
+        Transaction::create($request->all());
+        return [];
+
+        
+    }
+
+    /**
+     * Add new propriety price_brl, converting USD to BRL values
+     *
+     * @param [type] $products
+     * @return array
+     */
+    private function convertCurrency(array $products) : array
+    {
+        $currencyService = new CurrencyService();
+        $baseValue = $currencyService->convert(1);
+        $return = [];
+
+        foreach($products as $index => $product)
+        {
+            
+            $product->price_brl = $product->price * $baseValue->result->BRL;
+            $return[$index] = $product;
+        }
+        
+        return $return;
     }
 }
