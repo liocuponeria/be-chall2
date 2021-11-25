@@ -14,11 +14,3 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-
-$router->group(['prefix' => 'healthz'], function () use ($router) {
-    $router->get('', 'Controller@healthz');
-});
-
-$router->group(['prefix' => 'product'], function () use ($router) {
-    $router->get('/search/{type}/{category}', 'ProductController@search');
-});
