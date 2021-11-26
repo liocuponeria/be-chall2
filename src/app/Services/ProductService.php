@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Transaction;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ProductService
@@ -128,9 +129,13 @@ class ProductService
         if (  $validator->fails()) {
             return $validator->errors();
         }
+        DB::enableQueryLog();
+        $registry = Transaction::create($request->all());
 
-        Transaction::create($request->all());
-        return [];
+        return [
+            'id' => $registry->id,
+            'query' => last(DB::getQueryLog()),
+        ];
 
         
     }
@@ -153,7 +158,7 @@ class ProductService
             $product->price_brl = $product->price * $baseValue->result->BRL;
             $return[$index] = $product;
         }
-        
+
         return $return;
     }
 }
