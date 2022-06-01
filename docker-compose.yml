@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile-composer
     volumes:
       - ./src:/var/www/html
-    command: composer update
+    command: composer install --ignore-plataform-reqs
 
   app:
     image: app
