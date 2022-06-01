@@ -41,7 +41,7 @@ access <http://localhost/>
 
 ## Skills Required
 
-1. Get all products with type lipstick and category lip_gloss and show only:
+1. Get all products with type lipstick and category lip_gloss and show only (@See api http://makeup-api.herokuapp.com/) :
 	1. name
 	2. price original and in BRL*
 	3. description  
