@@ -17,7 +17,7 @@ This test aims to test the candidate's knowledge regarding the technologies used
 
 * Checkout to the branch of your name.
 
-* Commit your workflow, you can check this [article](https://medium.com/@rafael.oliveira/como-escrever-boas-mensagens-de-commit-9f8fe852155a).
+* Commit your workflow.
 
 * After you're done, push to the origin and create a pull request of the branch with your name.
 
