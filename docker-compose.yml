@@ -1,14 +1,13 @@
-version: '3.7'
+version: "3.7"
 
 services:
-
   composer:
     build:
       context: .
       dockerfile: Dockerfile-composer
     volumes:
       - ./src:/var/www/html
-    command: composer install --ignore-plataform-reqs
+    command: composer install --ignore-platform-reqs
 
   app:
     image: app
