@@ -25,7 +25,9 @@ class ProductController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function search($type, $category) {
-        [$makeup_response, $currency_response] = $this->get_apis_responses($type, $category);
+        $makeup_api_url = config('app.api_url') . "?product_type=${type}&product_category=${category}";
+
+        [$makeup_response, $currency_response] = $this->get_apis_responses($makeup_api_url);
 
         if (count($makeup_response) == 0) {
             return response()->json([
@@ -52,18 +54,27 @@ class ProductController extends Controller
     }
 
     /**
+     * Retorna o produto mais caro e o mais barato de uma marca.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function brands($brand) {
+        
+    }
+
+    /**
      * Faz a conexão com as API's necessárias
      *
      * @return array
      */
-    private function get_apis_responses($type, $category) {
+    private function get_apis_responses($makeup_api_url) {
         curl_setopt_array($this->currency_curl, [
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_URL => config('app.currency_api.url') . "/" . config('app.currency_api.key') . "/" . "latest/USD"
         ]);
         curl_setopt_array($this->makeup_curl, [
             CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_URL => config('app.api_url') . "?product_type=${type}&product_category=${category}"
+            CURLOPT_URL => $makeup_api_url
         ]);
 
         $multi_curl = curl_multi_init();
