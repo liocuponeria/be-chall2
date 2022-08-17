@@ -59,7 +59,49 @@ class ProductController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function brands($brand) {
-        
+        $makeup_api_url = config('app.api_url') . "?brand=${brand}";
+
+        [$makeup_response, $currency_response] = $this->get_apis_responses($makeup_api_url);
+
+        if (count($makeup_response) == 0) {
+            return response()->json([
+                'status' => 'invalid',
+                'message' => 'Não foi encontrado nenhum produto para essa busca!!'
+            ], 404);
+        }
+
+        if ($currency_response->result === 'error') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Houve um error ao buscar a conversão de moeda, por favor verifique a integração!!'
+            ], 500);
+        }
+
+        $this->currency_rate = $currency_response->conversion_rates->BRL;
+
+        $initial_value = new \stdClass();
+        $initial_value->price = "0";
+
+        $cheapest_product = array_reduce(
+            $makeup_response,
+            fn($carry, $item) => $this->cheapest_product($carry, $item),
+            $initial_value
+        );
+
+        $cheapest_product = $this->product_filter_fields($cheapest_product);
+
+        $most_expansive_product = array_reduce(
+            $makeup_response,
+            fn($carry, $item) => $this->most_expansive_product($carry, $item),
+            $initial_value
+        );
+
+        $most_expansive_product = $this->product_filter_fields($most_expansive_product);
+
+        return response()->json([
+            'cheapest_product' => $cheapest_product,
+            'most_expansive_product' => $most_expansive_product
+        ]);
     }
 
     /**
@@ -134,6 +176,33 @@ class ProductController extends Controller
      * @return string
      */
     private function convert_currency($price) {
+        $price = floatval($price);
         return strval(round(($price * $this->currency_rate), 2));
+    }
+
+    /**
+     * Valida o produto com menor valor.
+     *
+     * @return \stdClass
+     */
+    private function cheapest_product($previous_product, $current_product) {
+        if (floatval($previous_product->price) < floatval($current_product->price)) {
+            return $previous_product;
+        }
+
+        return $current_product;
+    }
+
+    /**
+     * Valida o produto com maior valor.
+     *
+     * @return \stdClass
+     */
+    private function most_expansive_product($previous_product, $current_product) {
+        if (floatval($previous_product->price) > floatval($current_product->price)) {
+            return $previous_product;
+        }
+
+        return $current_product;
     }
 }
