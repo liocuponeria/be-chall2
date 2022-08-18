@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 class ProductController extends Controller
 {
     public $makeup_curl;
@@ -102,6 +104,23 @@ class ProductController extends Controller
             'cheapest_product' => $cheapest_product,
             'most_expansive_product' => $most_expansive_product
         ]);
+    }
+
+    /**
+     * Insere a transação de um produto.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function buy(Request $request) {
+        $validated = $this->validate($request, [
+            'product_id' => 'required|numeric',
+            'user_id' => 'required|numeric',
+            'price' => 'required|numeric',
+            'date' => 'required|date',
+        ]);
+
+        return response()->json($validated);
     }
 
     /**
