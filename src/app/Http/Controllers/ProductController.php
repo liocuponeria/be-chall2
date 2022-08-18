@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Transaction;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -120,7 +122,11 @@ class ProductController extends Controller
             'date' => 'required|date',
         ]);
 
-        return response()->json($validated);
+        $validated['transaction_id'] = Str::str_random(50);
+
+        $transaction = Transaction::create($validated);
+
+        return response()->json($transaction->transaction_id);
     }
 
     /**
