@@ -20,10 +20,16 @@ class CoinConverter implements CoinConverterSourceInterface
         $uri = $this->url . $endpoint;
 
         $requestParams = array_merge([
-            'api_key' => '0c042fe0db-fbf2ab3b41-rjyuiq',
+            'api_key' => env('FAST_FOREX_API_KEY'),
         ], $params);
 
-        return Http::get($uri, $requestParams);
+        $apiResponse = json_decode(Http::get($uri, $requestParams)->getBody()->getContents(), true);
+
+        if (isset($apiResponse['error'])) {
+            throw new \Exception('Fast Forex Error: ' . $apiResponse['error'], 1);   
+        }
+        
+        return $apiResponse;
     }
 
     public function convert(float $amount, string $from, string $to) : float
@@ -43,12 +49,10 @@ class CoinConverter implements CoinConverterSourceInterface
             return $this->exchangeRates[$from][$to];
         }
 
-        $apiResponse = $this->get('/fetch-one', [
+        $converter = $this->get('/fetch-one', [
             'from' => $from,
             'to' => $to
         ]);
-        
-        $converter = json_decode($apiResponse->getBody()->getContents(), true);
 
         $rate = (float) $converter['result']['BRL'];
         $this->exchangeRates[$from][$to] = $rate;
