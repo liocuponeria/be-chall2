@@ -18,5 +18,8 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 WORKDIR /var/www/html
 COPY --chown=www-data:www-data . .
+RUN chown -R www-data:www-data /var/www/html
+RUN usermod -u 1000 www-data
+
 EXPOSE 80
 ENTRYPOINT ["/entrypoint.sh"]

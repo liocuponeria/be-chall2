@@ -51,6 +51,17 @@ $app->singleton(
 
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 
+$app->singleton(
+    App\Services\DataSource\ProductSourceInterface::class, function($app) {
+        return new \App\Services\DataSource\Product(\App\Model\Product::class);
+    }
+);
+
+$app->singleton(
+    App\Services\DataSource\CoinConverterSourceInterface::class, 
+    App\Services\DataSource\CoinConverter::class, 
+);
+
 /*
 |--------------------------------------------------------------------------
 | Register Config Files
@@ -75,9 +86,9 @@ $app->configure('app');
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->routeMiddleware([
+    'curl-block' => App\Http\Middleware\CurlMiddleware::class
+]);
 
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
