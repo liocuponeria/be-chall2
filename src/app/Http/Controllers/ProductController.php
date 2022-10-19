@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Services\ProductService;
+use App\Services\TransactionService;
 
 class ProductController extends Controller
 {
@@ -32,5 +34,29 @@ class ProductController extends Controller
         $products = $productService->searchCheapestAndMostExpensiveByBrand($brand);
         
         return response()->json(['products' => $products]);
+    }
+
+    public function buy(Request $request, TransactionService $transactionService)
+    {
+        $this->validate($request, [
+            'productId' => 'required|numeric',
+            'UserId' => 'required|numeric',
+            'Price' => 'required|numeric',
+            'Date' => 'required|date',
+        ]);
+   
+        $requestData = $request->all();
+
+        $transactionEloquent = $transactionService->saveWithEloquent($requestData);
+        $transactionQueryBuilder = $transactionService->saveWithQueryBuilder($requestData);
+        $transactionRawSql = $transactionService->saveWithRawSql($requestData);
+
+        return response()->json([
+            'transactions' => [
+                'eloquent' => $transactionEloquent,
+                'query_builder' => $transactionQueryBuilder,
+                'raw_sql' => $transactionRawSql,
+            ]
+            ]);
     }
 }
