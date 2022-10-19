@@ -12,6 +12,13 @@ class Product implements ProductSourceInterface
     {
         $this->modelClass = $modelClass;
     }
+    
+    /**
+     * Request makeup-api and return a filtered results by $filters param
+     *
+     * @param array $filters
+     * @return array
+     */
     public function find(array $filters) : array
     {
         $apiResponse = Http::acceptJson()->get($this->endpoint, $filters);

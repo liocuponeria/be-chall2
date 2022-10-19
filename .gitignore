@@ -1,3 +1,4 @@
 src/vendor
 src/storage
 .phpunit*
+.phpdoc

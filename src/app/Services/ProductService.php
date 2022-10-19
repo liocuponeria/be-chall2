@@ -11,7 +11,14 @@ class ProductService
         $this->dataSource = $dataSource;
     }
 
-    public function searchByTypeAndCategory(string $type, string $category)
+    /**
+     * Search a product by type and category
+     *
+     * @param string $type The product's type
+     * @param string $category The product's category
+     * @return array Return an array of Product
+     */
+    public function searchByTypeAndCategory(string $type, string $category): array
     {
         $products = $this->dataSource->find([
             ProductSourceInterface::FILTER_CATEGORY_PARAM => $category,
@@ -21,7 +28,13 @@ class ProductService
         return $products;
     }
 
-    public function searchCheapestAndMostExpensiveByBrand(string $brand)
+    /**
+     * Search de cheapest and the most expensive product by brand
+     *
+     * @param string $brand The product's brand
+     * @return array Return an array with the cheapest an most expensive product
+     */
+    public function searchCheapestAndMostExpensiveByBrand(string $brand): array
     {
         $products = $this->dataSource->find([
             ProductSourceInterface::FILTER_BRAND_PARAM => $brand,

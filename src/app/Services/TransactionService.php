@@ -9,7 +9,14 @@ use Illuminate\Support\Str;
 class TransactionService
 {
 
-    public function saveWithEloquent($requestData)
+    /**
+     * This method create a new Transaction model with $requestData and
+     * save it using Eloquent
+     *
+     * @param array $requestData
+     * @return Transaction
+     */
+    public function saveWithEloquent(array $requestData): Transaction
     {
         $transaction = new Transaction;
         $transaction->productId = $requestData['productId'];
@@ -21,7 +28,14 @@ class TransactionService
         return $transaction;
     }
 
-    public function saveWithQueryBuilder($requestData)
+    /**
+     * This method create a new Transaction model with $requestData and
+     * save it using Query Builder
+     *
+     * @param array $requestData
+     * @return Transaction
+     */
+    public function saveWithQueryBuilder(array $requestData): Transaction
     {
         $modelUuid = Str::uuid();
 
@@ -36,7 +50,14 @@ class TransactionService
         return Transaction::where('transactionId', $modelUuid)->first();
     }
 
-    public function saveWithRawSql($requestData)
+    /**
+     * This method create a new Transaction model with $requestData and
+     * save it using Raw SQL
+     *
+     * @param array $requestData
+     * @return Transaction
+     */
+    public function saveWithRawSql(array $requestData): Transaction
     {
 
         $modelUuid = Str::uuid();
@@ -55,7 +76,4 @@ class TransactionService
         return Transaction::where('transactionId', $modelUuid)->first();
         
     }
-          // $transactionService->saveWithEloquent();
-        // $transactionService->saveWithQueryBuilder();
-        // $transactionService->saveWithRawSql();
 }

@@ -11,6 +11,12 @@ class CoinConverterService
         $this->dataSource = $dataSource;
     }
 
+    /**
+     * Convert an USD amount to BRL
+     *
+     * @param float $amount
+     * @return float
+     */
     public function usdToBrl(float $amount) : float
     {
         return $this->dataSource->convert(
