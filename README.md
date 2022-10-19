@@ -59,7 +59,8 @@
 [&#10003;] Use [Lúmen](https://lumen.laravel.com/docs/8.x/) as your framework.\
 [&#10003;] Use MVC model\
 [&#10003;] Return a JSON on all responses\
-[&#10003;] Use cURL as html form is not allowed (Developed as middleware **src/app/Http/Middleware/CurlMiddleware.php**)\
+[&#10003;] Use cURL as html form is not allowed\
+		(Developed as middleware **src/app/Http/Middleware/CurlMiddleware.php**)
 
   #
   #
