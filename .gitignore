@@ -1,4 +1,7 @@
 src/vendor
-src/storage
+/src/storage/*
+!/src/storage/logs
+/src/storage/logs/*
+!/src/storage/logs/.gitkeep
 .phpunit*
 .phpdoc
